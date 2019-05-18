@@ -15,11 +15,9 @@ ORDER BY Trips DESC;'
 
 # Create a tibble
 bikes = call_neo4j(query = bikeQuery, con = con, type = "row", output="json")
-df_bikes = data.frame(matrix(ncol = 5, nrow = 0))
 x <- c("Trips","firstTrip","lastTrip", "duration", "bikeId")
 
-df_bikes = data.frame(transpose(data.frame(fromJSON(bikes)[[1]])$row))
-
+df_bikes = data.frame(t(data.frame((data.frame(fromJSON(bikes)[[1]])$row))))
 colnames(df_bikes) <- x
 
 df_bikes$duration = extract_numeric(df_bikes$duration)*-1 # Extract days in service
